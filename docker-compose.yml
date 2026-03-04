@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+    container_name: drfatima_backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/drfatima.db:/app/drfatima.db
+    networks:
+      - drfatima_net
+
+  frontend:
+    build: ./frontend
+    container_name: drfatima_frontend
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=http://backend:4000
+    ports:
+      - "5173:80"
+    networks:
+      - drfatima_net
+
+networks:
+  drfatima_net:
+    driver: bridge
